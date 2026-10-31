@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Government Scheme Information and Awareness System - discover schemes, check eligibility and find official application links." />
+  <title>SchemeSetu | Government Scheme Awareness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="topline"><div class="container top-inner"><span>भारत सरकार • Government Scheme Information Portal</span><span class="top-right">Public information service <span class="live-dot"></span> Updated awareness demo</span></div></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="SchemeSetu home"><span class="brand-mark">S</span><span><b>SchemeSetu</b><small>Know your benefits. Take the next step.</small></span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <nav id="mainNav">
+        <a href="index.html" class="nav-link active">Home</a><a href="schemes.html" class="nav-link">Explore Schemes</a><a href="eligibility.html" class="nav-link">Eligibility</a><a href="#how" class="nav-link">How it works</a>
+        <button class="btn btn-outline btn-small" id="loginOpen">Login</button><button class="btn btn-primary btn-small" id="registerOpen">Create account <span>↗</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-icon">✦</span> GOVERNMENT BENEFITS, MADE EASIER</div>
+          <h1>Find the support<br>you <em>deserve.</em></h1>
+          <p class="hero-lead">One simple place to discover Central and State Government schemes, understand eligibility and reach official application portals.</p>
+          <div class="hero-actions"><a class="btn btn-primary btn-large" href="schemes.html">Explore schemes <span>→</span></a><a class="text-link" href="eligibility.html">Check my eligibility <span>↗</span></a></div>
+          <div class="trust-row"><div class="avatar-stack"><i>✓</i><i>IN</i><i>AP</i></div><span>Clear information. Official links. Better awareness.</span></div>
+        </div>
+        <div class="hero-art">
+          <div class="hero-card card-main"><div class="card-top"><span class="mini-label">YOUR BENEFIT DISCOVERY</span><span class="pill pill-green">● Easy to explore</span></div><div class="illustration"><div class="sun"></div><div class="hill hill-one"></div><div class="hill hill-two"></div><div class="person"><span></span></div><div class="document"><b>₹</b><i></i><i></i><i></i><small>BENEFIT</small></div></div><div class="hero-card-bottom"><div><b>Find schemes that fit you</b><small>Based on your basic profile</small></div><span class="round-arrow">↗</span></div></div>
+          <div class="float-note note-one"><span class="note-icon">⌕</span><span><b>Search in one place</b><small>Less time. Less confusion.</small></span></div>
+          <div class="float-note note-two"><span class="note-icon green">✓</span><span><b>Know before you apply</b><small>Eligibility & documents</small></span></div>
+        </div>
+      </div>
+      <div class="hero-bottom container"><span>DESIGNED FOR EVERY CITIZEN</span><span class="hero-line"></span><span>EDUCATION · HEALTH · AGRICULTURE · HOUSING · EMPLOYMENT</span></div>
+    </section>
+
+    <section class="stats-section"><div class="container stats-grid">
+      <div class="stat"><span class="stat-icon">▦</span><div><b>One platform</b><small>Central & State schemes</small></div></div>
+      <div class="stat"><span class="stat-icon">◷</span><div><b>Save your time</b><small>Find information faster</small></div></div>
+      <div class="stat"><span class="stat-icon">✓</span><div><b>Check eligibility</b><small>Understand basic criteria</small></div></div>
+      <div class="stat"><span class="stat-icon">↗</span><div><b>Official resources</b><small>Apply through trusted portals</small></div></div>
+    </div></section>
+
+    <section class="section" id="schemes"><div class="container">
+      <div class="section-heading"><div><div class="eyebrow">DISCOVER WHAT'S AVAILABLE</div><h2>Explore government schemes</h2><p>Search by scheme name or choose a category to get started.</p></div><a href="schemes.html" class="text-link">Browse all schemes ↗</a></div>
+      <div class="search-panel"><div class="search-box"><span>⌕</span><input id="schemeSearch" type="search" placeholder="Search schemes, benefits or keywords..." /></div><select id="categoryFilter" aria-label="Filter by category"><option value="all">All categories</option><option>Education</option><option>Health</option><option>Agriculture</option><option>Housing</option><option>Employment</option><option>Women & Child</option><option>Social Security</option></select><button class="btn btn-primary" id="searchBtn">Search schemes</button></div>
+      <div class="category-row" id="categoryChips"><button class="category-chip selected" data-category="all"><span>✦</span> All schemes</button><button class="category-chip" data-category="Education"><span>▤</span> Education</button><button class="category-chip" data-category="Agriculture"><span>♧</span> Agriculture</button><button class="category-chip" data-category="Health"><span>✚</span> Health</button><button class="category-chip" data-category="Housing"><span>⌂</span> Housing</button><button class="category-chip" data-category="Women & Child"><span>♡</span> Women & child</button><button class="category-chip" data-category="Employment"><span>◷</span> Employment</button></div>
+      <div class="results-head" id="allSchemes"><div><h3>Popular schemes</h3><span id="resultCount">Showing schemes</span></div><span class="sort-label">Curated examples <span>⌄</span></span></div>
+      <div class="scheme-grid" id="schemeGrid"></div>
+      <div class="empty-state hidden" id="emptyState"><div>⌕</div><h3>No schemes found</h3><p>Try another keyword or select a different category.</p><button class="btn btn-outline" id="clearFilters">Clear filters</button></div>
+      <div class="disclaimer">Scheme information is provided for awareness and is a simplified overview. Eligibility, benefits and application windows may change. Always confirm details on the official government portal before applying.</div>
+    </div></section>
+
+    <section class="eligibility-section" id="eligibility"><div class="container eligibility-grid">
+      <div class="eligibility-copy"><div class="eyebrow light">PERSONALISED SCHEME DISCOVERY</div><h2>Could you be eligible<br>for a benefit?</h2><p>Answer a few basic questions to see schemes whose broad eligibility indicators may match your profile.</p>
+        <div class="check-points"><span>✓ No lengthy process</span><span>✓ Simple profile-based matching</span><span>✓ Review criteria before applying</span></div>
+        <div class="eligibility-art"><div class="art-circle"></div><div class="art-paper"><b>ELIGIBILITY</b><span>Profile check</span><i></i><i></i><i></i><div class="art-stamp">✓</div></div><div class="art-star">✳</div></div>
+      </div>
+      <div class="eligibility-form-card"><div class="form-card-head"><div><span class="step-label">QUICK ELIGIBILITY CHECK</span><h3>Tell us a little about yourself</h3></div><span class="form-icon">⌁</span></div>
+        <form id="eligibilityForm">
+          <div class="form-row"><label>Age <input type="number" id="age" min="1" max="120" placeholder="e.g. 28" required></label><label>Gender<select id="gender" required><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></label></div>
+          <div class="form-row"><label>State / Union Territory<select id="state" required><option value="">Select state</option><option>Andhra Pradesh</option><option>Telangana</option><option>Karnataka</option><option>Tamil Nadu</option><option>Other</option></select></label><label>Annual family income<select id="income" required><option value="">Select range</option><option value="100000">Below ₹1 lakh</option><option value="200000">₹1–2 lakh</option><option value="500000">₹2–5 lakh</option><option value="1000000">Above ₹5 lakh</option></select></label></div>
+          <div class="form-row"><label>Social category<select id="socialCategory"><option value="">Prefer not to say</option><option>SC</option><option>ST</option><option>OBC</option><option>General</option></select></label><label>Occupation<select id="occupation"><option value="">Select occupation</option><option>Farmer</option><option>Student</option><option>Unemployed</option><option>Self-employed</option><option>Worker</option><option>Other</option></select></label></div>
+          <label class="consent"><input type="checkbox" id="consent" required> I understand this is an indicative check, not an official eligibility decision.</label>
+          <button class="btn btn-primary btn-full" type="submit">Check matching schemes <span>→</span></button>
+        </form>
+        <div class="match-results hidden" id="matchResults"><div class="match-heading"><span class="pill pill-green">CHECK COMPLETE</span><button id="resetEligibility" class="text-link">Edit answers</button></div><h3 id="matchTitle">Possible matches</h3><p id="matchIntro"></p><div id="matchList"></div><small>These are indicative matches only. The concerned department makes the final eligibility decision.</small></div>
+      </div>
+    </div></section>
+
+    <section class="section how-section" id="how"><div class="container"><div class="section-heading centered"><div><div class="eyebrow">A SIMPLE JOURNEY</div><h2>From discovery to application</h2><p>Understand the process before visiting the official portal.</p></div></div>
+      <div class="steps-grid"><div class="step-card"><span class="step-number">01</span><div class="step-icon">⌕</div><h3>Discover schemes</h3><p>Browse schemes by category or search using simple keywords.</p></div><div class="step-card"><span class="step-number">02</span><div class="step-icon">☷</div><h3>Check eligibility</h3><p>Compare your basic profile with the scheme's stated criteria.</p></div><div class="step-card"><span class="step-number">03</span><div class="step-icon">▤</div><h3>Prepare documents</h3><p>Read the required-document checklist and application steps.</p></div><div class="step-card"><span class="step-number">04</span><div class="step-icon">↗</div><h3>Visit official portal</h3><p>Continue securely on the official government website.</p></div></div>
+    </div></section>
+
+    <section class="awareness-band"><div class="container awareness-inner"><div><div class="eyebrow light">AWARENESS FOR ALL</div><h2>Right information can open<br>the door to opportunity.</h2><p>Explore benefits, understand the process and make informed decisions.</p></div><a class="btn btn-white" href="schemes.html">Find a scheme <span>→</span></a></div></section>
+
+    <section class="section updates-section" id="updates"><div class="container updates-grid"><div><div class="eyebrow">STAY INFORMED</div><h2>Important updates<br>and announcements</h2><p>Keep an eye on scheme notices, deadlines and official announcements.</p><a class="text-link" href="#notifications">View notifications ↗</a></div><div class="updates-list" id="notifications"><article><span class="update-date">01 <small>NOTICE</small></span><div><b>Verify scheme details before applying</b><p>Check the latest eligibility rules and application dates on the official portal.</p></div><span class="update-arrow">↗</span></article><article><span class="update-date">02 <small>REMINDER</small></span><div><b>Keep supporting documents ready</b><p>Common documents may include identity, address, income and category certificates.</p></div><span class="update-arrow">↗</span></article><article><span class="update-date">03 <small>PORTAL</small></span><div><b>Use official application links</b><p>Avoid agents and never share OTPs, passwords or banking PINs.</p></div><span class="update-arrow">↗</span></article></div></div></section>
+
+    <section class="admin-section"><div class="container admin-strip"><div><span class="admin-symbol">⚙</span><div><b>Administrator access</b><small>Manage scheme information and review portal content (demo interface).</small></div></div><button class="btn btn-outline btn-small" id="adminOpen">Open admin dashboard ↗</button></div></section>
+  </main>
+
+  <footer><div class="container footer-main"><div class="brand footer-brand"><span class="brand-mark">S</span><span><b>SchemeSetu</b><small>Know your benefits. Take the next step.</small></span></div><div class="footer-links"><a href="index.html">Home</a><a href="schemes.html">Schemes</a><a href="eligibility.html">Eligibility</a><a href="#updates">Notifications</a></div><div class="footer-note">An educational project prototype<br>Not an official government website.</div></div><div class="container footer-bottom"><span>© 2026 SchemeSetu. Community awareness initiative.</span><span>Information must be verified with the concerned department.</span></div></footer>
+
+  <div class="modal-backdrop hidden" id="authModal"><div class="modal"><button class="modal-close" data-close="authModal">×</button><div class="modal-logo">S</div><div class="eyebrow">WELCOME TO SCHEMESETU</div><h2 id="authTitle">Create your account</h2><p id="authDescription">Save your profile and make scheme discovery easier.</p><form id="authForm"><label>Full name<input id="authName" placeholder="Enter your name" required></label><label>Email address<input id="authEmail" type="email" placeholder="name@example.com" required></label><label>Password<input id="authPassword" type="password" minlength="6" placeholder="At least 6 characters" required></label><button class="btn btn-primary btn-full" id="authSubmit" type="submit">Create account →</button></form><p class="switch-auth" id="switchAuth">Already have an account? <button>Login</button></p><small class="modal-disclaimer">Frontend demonstration only. Connect a secure backend for real authentication and data storage.</small></div></div>
+
+  <div class="modal-backdrop hidden" id="detailModal"><div class="modal detail-modal"><button class="modal-close" data-close="detailModal">×</button><div id="schemeDetail"></div></div></div>
+  <div class="modal-backdrop hidden" id="adminModal"><div class="modal admin-modal"><button class="modal-close" data-close="adminModal">×</button><div class="eyebrow">CONTENT MANAGEMENT</div><h2>Admin dashboard</h2><p>Demo overview for maintaining scheme information.</p><div class="admin-metrics"><div><b id="adminSchemeCount">0</b><small>Listed schemes</small></div><div><b>03</b><small>Sample notices</small></div><div><b>Active</b><small>Portal status</small></div></div><h3>Manage scheme catalogue</h3><div id="adminSchemeList" class="admin-scheme-list"></div><div class="admin-add"><h3>Add a scheme (demo)</h3><form id="addSchemeForm"><input id="newSchemeName" placeholder="Scheme name" required><select id="newSchemeCategory"><option>Education</option><option>Health</option><option>Agriculture</option><option>Housing</option><option>Employment</option><option>Women & Child</option><option>Social Security</option></select><button class="btn btn-primary btn-small">Add scheme</button></form></div><small>Changes are saved only in this browser for demonstration. Production use requires administrator authentication and a database.</small></div></div>
+
+  <!-- Order matters: data.js → common.js → app.js -->
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

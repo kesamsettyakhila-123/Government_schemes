@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Check Eligibility | SchemeSetu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body>
+  <div id="site-header" data-active="eligibility"></div>
+  <main>
+    <section class="page-hero"><div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> › Check eligibility</div>
+      <div class="eyebrow">PERSONALISED SCHEME DISCOVERY</div>
+      <h1>Could you be eligible for a benefit?</h1>
+      <p>Answer six simple questions. We will show schemes whose broad criteria may match your profile, with the reason for each match. This is only an indicative check.</p>
+    </div></section>
+
+    <div class="container elig-layout">
+      <form class="elig-form" id="form">
+        <h2>Tell us about yourself</h2><p>Nothing is stored or sent anywhere.</p>
+        <div class="two">
+          <label>Age<input type="number" id="age" min="1" max="120" placeholder="e.g. 28" required></label>
+          <label>Gender<select id="gender" required><option value="">Select</option><option>Female</option><option>Male</option><option>Other</option></select></label>
+        </div>
+        <label>State / Union Territory<select id="state" required></select></label>
+        <label>Annual family income
+          <select id="income" required>
+            <option value="">Select range</option>
+            <option value="0">Below ₹1 lakh</option><option value="100000">₹1–2 lakh</option>
+            <option value="200000">₹2–5 lakh</option><option value="500000">Above ₹5 lakh</option>
+          </select></label>
+        <label>Occupation
+          <select id="occupation" required><option value="">Select occupation</option><option>Farmer</option><option>Student</option><option>Unemployed</option><option>Self-employed</option><option>Worker</option><option>Other</option></select></label>
+        <label class="consent"><input type="checkbox" id="consent" required> I understand this is an indicative check, not an official eligibility decision.</label>
+        <button class="btn btn-primary btn-full" type="submit">Show matching schemes →</button>
+      </form>
+
+      <section id="results" aria-live="polite">
+        <div class="placeholder"><div>✓</div>Your matching schemes will appear here.<br>Fill in the form and tap <b>Show matching schemes</b>.</div>
+      </section>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script>
+    const el = id => document.getElementById(id);
+    el("state").innerHTML = '<option value="">Select state</option>' + STATES.map(s => `<option>${esc(s)}</option>`).join("");
+
+    function show(p) {
+      const matches = matchSchemes(p);
+      const strong = matches.filter(m => m.score >= 2);
+      const rest = matches.filter(m => m.score < 2);
+      const card = m => {
+        const s = m.scheme;
+        const reasons = m.reasons.length ? m.reasons.map(r => `<span>✓ ${esc(r)}</span>`).join("") : `<span>Open to all - check portal rules</span>`;
+        return `<div class="match-card"><div class="scheme-icon">${esc(s.icon || "📋")}</div>
+          <div><h3>${esc(s.name)}</h3><p>${esc(s.benefit)}</p><div class="reasons">${reasons}</div></div>
+          <div class="match-actions"><a href="scheme.html?id=${encodeURIComponent(s.id)}">View details →</a><a href="${esc(safeUrl(s.link))}" target="_blank" rel="noopener noreferrer">Official site ↗</a></div></div>`;
+      };
+      el("results").innerHTML = `
+        <div class="result-head"><div><h2>${matches.length} possible matches</h2><span>Age ${p.age} · ${esc(p.gender)} · ${esc(p.state)} · ${esc(p.occupation)}</span></div>
+          <a class="text-link" href="schemes.html">Browse all schemes ↗</a></div>
+        ${strong.length ? `<div class="group-title">Strong matches</div>${strong.map(card).join("")}` : ""}
+        ${rest.length ? `<div class="group-title">Also worth checking</div>${rest.map(card).join("")}` : ""}
+        ${!matches.length ? `<div class="placeholder"><div>⌕</div>No indicative matches. Try browsing all schemes.</div>` : ""}
+        <div class="disclaimer">These are indicative matches only. The concerned department makes the final eligibility decision.</div>`;
+      el("results").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    el("form").addEventListener("submit", e => {
+      e.preventDefault();
+      const age = Number(el("age").value);
+      if (!(age >= 1 && age <= 120)) return showToast("Please enter a valid age.");
+      show({ age, gender: el("gender").value, state: el("state").value, income: Number(el("income").value), occupation: el("occupation").value });
+    });
+
+    // pre-fill from the Home page quick check (?age=..&gender=..)
+    const q = new URLSearchParams(location.search);
+    if (q.get("age")) {
+      el("age").value = q.get("age"); el("gender").value = q.get("gender") || "";
+      el("state").value = q.get("state") || ""; el("income").value = q.get("income") || "";
+      el("occupation").value = q.get("occupation") || ""; el("consent").checked = true;
+      if (el("form").checkValidity()) el("form").requestSubmit();
+    }
+  </script>
+</body>
+</html>

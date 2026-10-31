@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scheme details | SchemeSetu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body>
+  <div id="site-header" data-active="schemes"></div>
+  <main><div class="container" id="detail"></div></main>
+  <div id="site-footer"></div>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get("id");
+    const s = getScheme(id);
+    const root = document.getElementById("detail");
+    const list = arr => (arr && arr.length ? arr : ["Please check the official portal."]).map(i => `<li>${esc(i)}</li>`).join("");
+
+    if (!s) {
+      root.innerHTML = `<div class="placeholder" style="margin:60px 0"><div>⌕</div><b>Scheme not found</b><br>It may have been removed.<br><br><a class="btn btn-primary" href="schemes.html">Browse all schemes →</a></div>`;
+    } else {
+      document.title = s.name + " | SchemeSetu";
+      const where = s.level === "State" ? s.state + " (State)" : "Central Government";
+      const link = safeUrl(s.link);
+      const related = SCHEMES.filter(x => x.category === s.category && x.id !== s.id).slice(0, 3);
+      root.innerHTML = `
+        <div class="breadcrumb" style="margin-top:26px"><a href="index.html">Home</a> › <a href="schemes.html">Schemes</a> › <a href="schemes.html?category=${encodeURIComponent(s.category)}">${esc(s.category)}</a> › ${esc(s.name)}</div>
+        <div class="detail-layout">
+          <div class="detail-main">
+            <div class="detail-head"><div class="detail-icon">${esc(s.icon || "📋")}</div><div><span class="scheme-tag">${esc(s.category)}</span><h1>${esc(s.name)}</h1></div></div>
+            <p class="detail-lead">${esc(s.description)}</p>
+            <div class="info-card benefit"><h2>✦ What you get</h2><p>${esc(s.benefit)}</p></div>
+            <div class="info-card"><h2>Who can apply</h2><ul>${list(s.eligibility)}</ul></div>
+            <div class="info-card"><h2>Documents to keep ready</h2><ul>${list(s.documents)}</ul></div>
+            <div class="info-card"><h2>How to apply</h2><ol class="how-steps" style="margin:0">${list(s.steps)}</ol></div>
+          </div>
+          <aside class="side-card">
+            <h3>Ready to apply?</h3>
+            <p>Continue on the official government website. SchemeSetu never collects your Aadhaar, OTP or bank details.</p>
+            <a class="btn btn-primary" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Visit official website ↗</a>
+            <button class="btn btn-outline" id="saveBtn" type="button"></button>
+            <button class="btn btn-outline" id="shareBtn" type="button">Share this scheme</button>
+            <button class="btn btn-outline" onclick="window.print()" type="button">Print checklist</button>
+            <div class="fact"><span>Level</span><b>${esc(where)}</b></div>
+            <div class="fact"><span>Category</span><b>${esc(s.category)}</b></div>
+            <div class="fact"><span>Official site</span><b>${esc(new URL(link).hostname)}</b></div>
+            <div class="warn">⚠ Details change. Confirm eligibility, amounts and last dates on the official site. Never pay agents or share OTPs / PINs.</div>
+          </aside>
+        </div>
+        ${related.length ? `<h2 class="block-title" style="margin-top:0">More in ${esc(s.category)}</h2><p class="block-sub">Other schemes you may want to look at.</p><div class="related-grid" id="related" style="margin:18px 0 70px"></div>` : ""}`;
+
+      const saveBtn = document.getElementById("saveBtn");
+      const paintSave = () => saveBtn.textContent = isSaved(s.id) ? "♥ Saved (tap to remove)" : "♡ Save this scheme";
+      paintSave();
+      saveBtn.addEventListener("click", () => { const on = toggleSaved(s.id); paintSave(); showToast(on ? "Scheme saved" : "Removed from saved"); });
+
+      document.getElementById("shareBtn").addEventListener("click", async () => {
+        const data = { title: s.name, text: s.description, url: location.href };
+        try {
+          if (navigator.share) await navigator.share(data);
+          else { await navigator.clipboard.writeText(location.href); showToast("Link copied"); }
+        } catch (e) { /* cancelled */ }
+      });
+
+      const rel = document.getElementById("related");
+      if (rel) related.forEach(r => rel.appendChild(schemeCard(r)));
+    }
+  </script>
+</body>
+</html>

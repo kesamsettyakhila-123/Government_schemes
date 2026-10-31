@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore Schemes | SchemeSetu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="pages.css" />
+</head>
+<body>
+  <div id="site-header" data-active="schemes"></div>
+  <main>
+    <section class="page-hero"><div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> › Explore schemes</div>
+      <div class="eyebrow">DISCOVER WHAT'S AVAILABLE</div>
+      <h1>Explore government schemes</h1>
+      <p>Search by name, benefit or keyword. Open any scheme to see who can apply, which documents you need, how to apply and the official website.</p>
+      <div class="search-panel" style="grid-template-columns:1fr 190px">
+        <div class="search-box"><span>⌕</span><input id="q" type="search" placeholder="Try: farmer, scholarship, pension, loan, health..." /></div>
+        <select id="cat" aria-label="Category"><option value="all">All categories</option></select>
+      </div>
+    </div></section>
+
+    <section class="section" style="padding-top:34px"><div class="container">
+      <div class="category-row" id="chips" style="margin:0 0 18px"></div>
+      <div class="filter-bar">
+        <select id="level" aria-label="Level"><option value="all">Central &amp; State</option><option value="Central">Central schemes</option><option value="State">State schemes</option></select>
+        <select id="aud" aria-label="Who is it for"><option value="all">Everyone</option></select>
+        <select id="sort" aria-label="Sort"><option value="az">Sort: A to Z</option><option value="cat">Sort: Category</option></select>
+        <span class="grow"></span>
+        <button class="toggle-saved" id="savedToggle" type="button">♡ Saved only</button>
+      </div>
+      <div class="results-head"><div><h3>All schemes</h3><span id="count"></span></div><button class="text-link" id="clear" type="button" style="border:0;background:none;cursor:pointer">Clear filters ✕</button></div>
+      <div class="scheme-grid" id="grid"></div>
+      <div class="empty-state hidden" id="empty"><div>⌕</div><h3>No schemes found</h3><p>Try another keyword or clear the filters.</p><button class="btn btn-outline" id="clear2" type="button">Clear filters</button></div>
+      <div class="disclaimer">Scheme information is a simplified overview. Eligibility, benefits and application dates can change. Always confirm on the official government portal before applying.</div>
+
+      <h2 class="block-title">Trusted official portals</h2>
+      <p class="block-sub">Start here if you are not sure which scheme fits you.</p>
+      <div class="portal-grid">
+        <a class="portal-card" href="https://www.myscheme.gov.in/" target="_blank" rel="noopener noreferrer"><b>myScheme</b><span>National platform to discover schemes you may qualify for.</span><em>Open portal ↗</em></a>
+        <a class="portal-card" href="https://www.india.gov.in/" target="_blank" rel="noopener noreferrer"><b>National Portal of India</b><span>Gateway to Central and State government services.</span><em>Open portal ↗</em></a>
+        <a class="portal-card" href="https://web.umang.gov.in/" target="_blank" rel="noopener noreferrer"><b>UMANG</b><span>Many government services in one app.</span><em>Open portal ↗</em></a>
+        <a class="portal-card" href="https://www.digilocker.gov.in/" target="_blank" rel="noopener noreferrer"><b>DigiLocker</b><span>Store and share your documents digitally.</span><em>Open portal ↗</em></a>
+        <a class="portal-card" href="https://www.jansamarth.in/" target="_blank" rel="noopener noreferrer"><b>Jan Samarth</b><span>Credit-linked government schemes on one portal.</span><em>Open portal ↗</em></a>
+      </div>
+    </div></section>
+  </main>
+  <div id="site-footer"></div>
+
+  <script src="data.js"></script>
+  <script src="common.js"></script>
+  <script>
+    const el = id => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    const state = {
+      q: params.get("q") || "", cat: params.get("category") || "all", level: params.get("level") || "all",
+      aud: params.get("aud") || "all", sort: params.get("sort") || "az", saved: params.get("saved") === "1"
+    };
+
+    // build controls
+    CATEGORIES.forEach(c => el("cat").insertAdjacentHTML("beforeend", `<option>${esc(c)}</option>`));
+    AUDIENCES.forEach(a => el("aud").insertAdjacentHTML("beforeend", `<option value="${a[0]}">${esc(a[1])}</option>`));
+    const chipIcons = { all: "✦", Education: "▤", Health: "✚", Agriculture: "♧", Housing: "⌂", Employment: "◷", "Women & Child": "♡", "Social Security": "◈" };
+    ["all"].concat(CATEGORIES).forEach(c => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "category-chip"; b.dataset.category = c;
+      b.innerHTML = `<span>${chipIcons[c] || "•"}</span> ${c === "all" ? "All schemes" : esc(c)}`;
+      b.addEventListener("click", () => { state.cat = c; render(); });
+      el("chips").appendChild(b);
+    });
+
+    function sync() {
+      el("q").value = state.q; el("cat").value = state.cat; el("level").value = state.level;
+      el("aud").value = state.aud; el("sort").value = state.sort;
+      el("savedToggle").classList.toggle("on", state.saved);
+      el("savedToggle").textContent = state.saved ? "♥ Saved only" : "♡ Saved only";
+      document.querySelectorAll(".category-chip").forEach(b => b.classList.toggle("selected", b.dataset.category === state.cat));
+      const p = new URLSearchParams();
+      if (state.q) p.set("q", state.q);
+      if (state.cat !== "all") p.set("category", state.cat);
+      if (state.level !== "all") p.set("level", state.level);
+      if (state.aud !== "all") p.set("aud", state.aud);
+      if (state.sort !== "az") p.set("sort", state.sort);
+      if (state.saved) p.set("saved", "1");
+      history.replaceState(null, "", location.pathname + (p.toString() ? "?" + p : ""));
+    }
+
+    function render() {
+      sync();
+      const kw = state.q.toLowerCase().trim();
+      const saved = getSaved();
+      let list = SCHEMES.filter(s => {
+        if (state.cat !== "all" && s.category !== state.cat) return false;
+        if (state.level !== "all" && s.level !== state.level) return false;
+        if (state.aud !== "all" && !(s.tags || []).includes(state.aud)) return false;
+        if (state.saved && !saved.includes(s.id)) return false;
+        if (!kw) return true;
+        return [s.name, s.category, s.description, s.benefit, s.state || "", (s.tags || []).join(" "), (s.eligibility || []).join(" ")].join(" ").toLowerCase().includes(kw);
+      });
+      list.sort((a, b) => state.sort === "cat" ? a.category.localeCompare(b.category) || a.name.localeCompare(b.name) : a.name.localeCompare(b.name));
+      el("grid").innerHTML = "";
+      list.forEach(s => el("grid").appendChild(schemeCard(s)));
+      el("count").textContent = `Showing ${list.length} of ${SCHEMES.length} schemes`;
+      el("empty").classList.toggle("hidden", list.length > 0);
+    }
+
+    el("q").addEventListener("input", e => { state.q = e.target.value; render(); });
+    el("cat").addEventListener("change", e => { state.cat = e.target.value; render(); });
+    el("level").addEventListener("change", e => { state.level = e.target.value; render(); });
+    el("aud").addEventListener("change", e => { state.aud = e.target.value; render(); });
+    el("sort").addEventListener("change", e => { state.sort = e.target.value; render(); });
+    el("savedToggle").addEventListener("click", () => { state.saved = !state.saved; render(); });
+    const clear = () => { Object.assign(state, { q: "", cat: "all", level: "all", aud: "all", sort: "az", saved: false }); render(); };
+    el("clear").addEventListener("click", clear);
+    el("clear2").addEventListener("click", clear);
+    render();
+  </script>
+</body>
+</html>
